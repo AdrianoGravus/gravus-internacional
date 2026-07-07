@@ -72,7 +72,24 @@
 
     <!-- sidebar -->
     <aside style="border-right:1px solid rgba(255,255,255,0.08);padding:16px 16px 24px;position:sticky;top:64px;align-self:start;max-height:calc(100vh - 122px);overflow-y:auto">
-      <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.42);margin:2px 0 10px"><span style="width:3px;height:13px;border-radius:2px;background:#E7E013"></span>Destaques globais</div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.42);margin:2px 0 8px"><span style="width:3px;height:13px;border-radius:2px;background:#E7E013"></span>Curva de Treasuries · EUA</div>
+      <sc-for list="{{ tsRows }}" as="t" hint-placeholder-count="5">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 2px;border-bottom:1px solid rgba(255,255,255,0.06)">
+          <div style="font-size:12px;color:rgba(255,255,255,0.55)">{{ t.label }}</div>
+          <div style="display:flex;align-items:baseline;gap:8px">
+            <span style="font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;color:{{ t.valCol }}">{{ t.val }}</span>
+            <span style="font-size:11px;font-weight:600;font-variant-numeric:tabular-nums;min-width:48px;text-align:right;color:{{ t.col }}">{{ t.chg }}</span>
+          </div>
+        </div>
+      </sc-for>
+      <sc-for list="{{ tsSpreads }}" as="t" hint-placeholder-count="2">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 2px;border-bottom:1px solid rgba(255,255,255,0.06)">
+          <div style="font-size:12px;color:rgba(255,255,255,0.55)">{{ t.label }}</div>
+          <div style="font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;color:{{ t.col }}">{{ t.val }}</div>
+        </div>
+      </sc-for>
+
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.42);margin:16px 0 10px"><span style="width:3px;height:13px;border-radius:2px;background:#E7E013"></span>Destaques globais</div>
       <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="8">
         <div style="background:{{ k.cardBg }};border:1px solid {{ k.cardBorder }};border-radius:14px;padding:12px 14px;margin-bottom:8px">
           <div style="font-size:12px;font-weight:600;color:{{ k.labelCol }}">{{ k.label }}</div>
@@ -113,15 +130,15 @@
         <span>Atualizado: <span style="color:rgba(255,255,255,0.75);font-weight:600;font-variant-numeric:tabular-nums">{{ lastUpd }}</span></span>
         <span>Próxima em <span style="color:rgba(255,255,255,0.75);font-weight:600;font-variant-numeric:tabular-nums">{{ countdown }}</span>s</span>
       </div>
-      <div style="height:3px;background:rgba(255,255,255,0.08);border-radius:9999px;overflow:hidden;margin-bottom:16px">
+      <div style="height:3px;background:rgba(255,255,255,0.08);border-radius:9999px;overflow:hidden;margin-bottom:10px">
         <div style="height:100%;background:#E7E013;border-radius:9999px;width:{{ refreshPct }}%;transition:width 1s linear"></div>
       </div>
 
       <!-- sessões pelo mundo -->
-      <div style="display:flex;align-items:center;gap:14px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.50);margin:0 0 12px">Sessões pelo mundo<span style="flex:1;height:1px;background:rgba(255,255,255,0.08)"></span></div>
-      <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:18px">
+      <div style="display:flex;align-items:center;gap:14px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.50);margin:0 0 8px">Sessões pelo mundo<span style="flex:1;height:1px;background:rgba(255,255,255,0.08)"></span></div>
+      <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px">
         <sc-for list="{{ sessions }}" as="ss" hint-placeholder-count="9">
-          <div style="flex-shrink:0;min-width:128px;border-radius:12px;padding:10px 14px;background:{{ ss.bgc }};border:1px solid {{ ss.border }}">
+          <div style="flex-shrink:0;min-width:122px;border-radius:12px;padding:8px 12px;background:{{ ss.bgc }};border:1px solid {{ ss.border }}">
             <div style="display:flex;align-items:center;gap:6px">
               <span style="width:8px;height:8px;border-radius:50%;background:{{ ss.col }};flex-shrink:0"></span>
               <span style="font-size:13px;font-weight:700;color:#ffffff;white-space:nowrap">{{ ss.city }}</span>
@@ -135,10 +152,39 @@
         </sc-for>
       </div>
 
+      <!-- notícias -->
+      <div style="display:flex;align-items:center;gap:14px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.50);margin:0 0 8px">Notícias globais<span style="flex:1;height:1px;background:rgba(255,255,255,0.08)"></span></div>
+      <div ref="{{ newsRef }}" style="display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;scroll-behavior:smooth">
+        <sc-for list="{{ news }}" as="n" hint-placeholder-count="5">
+          <a href="{{ n.link }}" target="_blank" style="width:290px;flex-shrink:0;background:#141946;border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:border-color 300ms cubic-bezier(.22,1,.36,1)" style-hover="border-color:rgba(255,255,255,0.22)">
+            <div style="position:relative;height:126px;background:#1e2a5a;overflow:hidden;flex-shrink:0">
+              <sc-if value="{{ n.noImage }}" hint-placeholder-val="{{ true }}">
+                <div style="position:absolute;width:150px;height:150px;border-radius:50%;background:#E4E659;opacity:0.08;top:-60px;right:-45px"></div>
+                <div style="position:absolute;width:86px;height:86px;border-radius:50%;background:#E4E659;opacity:0.12;top:-22px;right:-8px"></div>
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+                  <div style="width:44px;height:44px;border-radius:11px;background:rgba(255,255,255,0.10);display:flex;align-items:center;justify-content:center;color:#E4E659">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="width:21px;height:21px"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Z"></path><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"></path></svg>
+                  </div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ n.hasImage }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;inset:0;background-image:url('{{ n.image }}');background-size:cover;background-position:center"></div>
+              </sc-if>
+              <div style="position:absolute;top:9px;left:9px;padding:2px 7px;border-radius:6px;font-size:10px;font-weight:800;letter-spacing:1px;color:{{ n.langCol }};background:{{ n.langBg }}">{{ n.langLabel }}</div>
+            </div>
+            <div style="padding:10px 13px 11px;display:flex;flex-direction:column;flex:1">
+              <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.source }}</div>
+              <div style="margin-top:5px;font-size:14px;font-weight:600;line-height:1.35;color:#ffffff;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">{{ n.title }}</div>
+              <div style="margin-top:auto;padding-top:6px;font-size:11px;color:rgba(255,255,255,0.35)">{{ n.time }}</div>
+            </div>
+          </a>
+        </sc-for>
+      </div>
+
       <!-- gráfico S&P 500 -->
-      <div style="display:flex;align-items:center;gap:14px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.50);margin:0 0 12px">S&amp;P 500 · Wall Street<span style="flex:1;height:1px;background:rgba(255,255,255,0.08)"></span></div>
-      <div style="background:#141946;border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;margin-bottom:18px">
-        <iframe src="https://s.tradingview.com/widgetembed/?frameElementId=tv-chart&amp;symbol=FOREXCOM%3ASPXUSD&amp;interval=D&amp;theme=dark&amp;style=1&amp;locale=pt_BR&amp;enable_publishing=false&amp;hide_top_toolbar=false&amp;hide_side_toolbar=true&amp;allow_symbol_change=false&amp;save_image=false&amp;withdateranges=true&amp;hide_volume=false&amp;backgroundColor=rgba(11%2C14%2C38%2C1)&amp;gridColor=rgba(45%2C56%2C116%2C0.3)" style="width:100%;height:380px;border:none;display:block" allowfullscreen="true"></iframe>
+      <div style="display:flex;align-items:center;gap:14px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.50);margin:0 0 8px">S&amp;P 500 · Wall Street<span style="flex:1;height:1px;background:rgba(255,255,255,0.08)"></span></div>
+      <div style="background:#141946;border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;margin-bottom:14px">
+        <iframe src="https://s.tradingview.com/widgetembed/?frameElementId=tv-chart&amp;symbol=FOREXCOM%3ASPXUSD&amp;interval=D&amp;theme=dark&amp;style=1&amp;locale=pt_BR&amp;enable_publishing=false&amp;hide_top_toolbar=true&amp;hide_side_toolbar=true&amp;allow_symbol_change=false&amp;save_image=false&amp;withdateranges=false&amp;hide_volume=true&amp;backgroundColor=rgba(11%2C14%2C38%2C1)&amp;gridColor=rgba(45%2C56%2C116%2C0.3)" style="width:100%;height:300px;border:none;display:block" allowfullscreen="true"></iframe>
       </div>
 
       <!-- futuros EUA -->
@@ -197,35 +243,6 @@
           </div>
         </sc-for>
       </div>
-      <!-- notícias -->
-      <div style="display:flex;align-items:center;gap:14px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.50);margin:10px 0 12px">Notícias globais<span style="flex:1;height:1px;background:rgba(255,255,255,0.08)"></span></div>
-      <div ref="{{ newsRef }}" style="display:flex;gap:14px;overflow-x:auto;padding-bottom:10px;margin-bottom:16px;scroll-behavior:smooth">
-        <sc-for list="{{ news }}" as="n" hint-placeholder-count="5">
-          <a href="{{ n.link }}" target="_blank" style="width:300px;flex-shrink:0;background:#141946;border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;transition:border-color 300ms cubic-bezier(.22,1,.36,1)" style-hover="border-color:rgba(255,255,255,0.22)">
-            <div style="position:relative;height:158px;background:#1e2a5a;overflow:hidden;flex-shrink:0">
-              <sc-if value="{{ n.noImage }}" hint-placeholder-val="{{ true }}">
-                <div style="position:absolute;width:180px;height:180px;border-radius:50%;background:#E4E659;opacity:0.08;top:-70px;right:-50px"></div>
-                <div style="position:absolute;width:100px;height:100px;border-radius:50%;background:#E4E659;opacity:0.12;top:-25px;right:-10px"></div>
-                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
-                  <div style="width:52px;height:52px;border-radius:12px;background:rgba(255,255,255,0.10);display:flex;align-items:center;justify-content:center;color:#E4E659">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Z"></path><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"></path></svg>
-                  </div>
-                </div>
-              </sc-if>
-              <sc-if value="{{ n.hasImage }}" hint-placeholder-val="{{ false }}">
-                <div style="position:absolute;inset:0;background-image:url('{{ n.image }}');background-size:cover;background-position:center"></div>
-              </sc-if>
-              <div style="position:absolute;top:10px;left:10px;padding:3px 8px;border-radius:7px;font-size:10px;font-weight:800;letter-spacing:1px;color:{{ n.langCol }};background:{{ n.langBg }}">{{ n.langLabel }}</div>
-            </div>
-            <div style="padding:13px 15px 14px;display:flex;flex-direction:column;flex:1">
-              <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.source }}</div>
-              <div style="margin-top:7px;font-size:16px;font-weight:600;line-height:1.38;color:#ffffff;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">{{ n.title }}</div>
-              <div style="margin-top:auto;padding-top:8px;font-size:11px;color:rgba(255,255,255,0.35)">{{ n.time }}</div>
-            </div>
-          </a>
-        </sc-for>
-      </div>
-
       <!-- calendário econômico -->
       <div style="display:flex;align-items:center;gap:14px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.50);margin:10px 0 12px">Calendário econômico<span style="flex:1;height:1px;background:rgba(255,255,255,0.08)"></span></div>
       <div style="background:#141946;border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;margin-bottom:18px">
@@ -602,7 +619,7 @@ class Component extends DCLogic {
     const el = this.newsRef.current;
     if (!el || el.scrollWidth <= el.clientWidth + 10) return;
     if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 40) el.scrollTo({ left: 0, behavior: 'smooth' });
-    else el.scrollTo({ left: el.scrollLeft + 314, behavior: 'smooth' });
+    else el.scrollTo({ left: el.scrollLeft + 302, behavior: 'smooth' });
   }
 
   tick() {
@@ -683,13 +700,6 @@ class Component extends DCLogic {
       mkKpi('S&P 500', 'americas', '^GSPC', 2, ''),
       mkKpi('Euro Stoxx 50', 'europe', '^STOXX50E', 2, ''),
       mkKpi('Nikkei 225', 'asia', '^N225', 0, ''),
-      {
-        label: 'Treasury 10 anos', value: t10.price == null ? '—' : this.fmt3(t10.price) + '%',
-        valueCol: '#141946', chip: false, chg: '', col: '#22C55E', bg: 'transparent', a: 'M7 17 L17 7',
-        hasSub: true, sub: 'yield · EUA',
-        cardBg: '#E4E659', cardBorder: 'transparent',
-        labelCol: 'rgba(20,25,70,0.60)', subCol: 'rgba(20,25,70,0.55)'
-      },
       mkKpi('VIX · Volatilidade', 'americas', '^VIX', 2, ''),
       mkKpi('Dólar · DXY', 'currencies', 'DX-Y.NYB', 2, ''),
       mkKpi('Petróleo Brent', 'commodities', 'BZ=F', 2, 'US$ '),
@@ -740,6 +750,17 @@ class Component extends DCLogic {
     const s210 = bps(t10.price, t2.price);
     const s103 = bps(t10.price, t3m.price);
     const bpsTxt = (v) => v == null ? '—' : (v >= 0 ? '+' : '') + v + ' bps';
+    const tsRows = [
+      ['3 meses', t3m, false], ['2 anos', t2, false], ['5 anos', t5, false], ['10 anos', t10, true], ['30 anos', t30, false]
+    ].map(([label, q, strong]) => ({
+      label, val: q.price == null ? '—' : this.fmt3(q.price) + '%',
+      chg: this.pctStr(q.pct), col: this.upMeta(q.pct).col,
+      valCol: strong ? '#E4E659' : '#ffffff'
+    }));
+    const tsSpreads = [
+      { label: 'Spread 2s10s', val: bpsTxt(s210), col: s210 != null && s210 < 0 ? '#F87171' : '#22C55E' },
+      { label: 'Spread 10a−3m', val: bpsTxt(s103), col: s103 != null && s103 < 0 ? '#F87171' : '#22C55E' }
+    ];
 
     // NY session status
     const ny = this.tzParts('America/New_York');
@@ -769,7 +790,7 @@ class Component extends DCLogic {
       spr103: bpsTxt(s103), spr103Col: s103 != null && s103 < 0 ? '#F87171' : '#22C55E',
       nyStatusCol: nyOpen ? '#22C55E' : 'rgba(255,255,255,0.45)',
       nyStatusText: nyOpen ? 'NY aberta' : 'NY fechada',
-      yieldChips
+      yieldChips, tsRows, tsSpreads
     };
   }
 }
