@@ -591,9 +591,11 @@ class Component extends DCLogic {
     this.tick();
     this._iv = setInterval(() => this.tick(), 1000);
     this._scroller = setInterval(() => this.autoScroll(), 8000);
+    // o iframe do TradingView rouba o foco e rola a página no load; devolve ao topo
+    this._topFix = [800, 2000, 4000].map(ms => setTimeout(() => window.scrollTo(0, 0), ms));
     this.refresh();
   }
-  componentWillUnmount() { clearInterval(this._iv); clearInterval(this._scroller); }
+  componentWillUnmount() { clearInterval(this._iv); clearInterval(this._scroller); (this._topFix || []).forEach(clearTimeout); }
 
   autoScroll() {
     if (this.props.autoScrollNews === false) return;
