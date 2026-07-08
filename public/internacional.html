@@ -610,9 +610,23 @@ class Component extends DCLogic {
     this._scroller = setInterval(() => this.autoScroll(), 8000);
     // o iframe do TradingView rouba o foco e rola a página no load; devolve ao topo
     this._topFix = [800, 2000, 4000].map(ms => setTimeout(() => window.scrollTo(0, 0), ms));
+    // o canvas do TradingView às vezes não pinta até receber um resize; cutuca os iframes
+    this._nudges = [2500, 5000, 9000, 15000].map(ms => setTimeout(() => this.nudgeCharts(), ms));
     this.refresh();
   }
-  componentWillUnmount() { clearInterval(this._iv); clearInterval(this._scroller); (this._topFix || []).forEach(clearTimeout); }
+  componentWillUnmount() { clearInterval(this._iv); clearInterval(this._scroller); (this._topFix || []).forEach(clearTimeout); (this._nudges || []).forEach(clearTimeout); }
+
+  nudgeCharts() {
+    const frames = document.querySelectorAll('iframe');
+    for (let i = 0; i < frames.length; i++) {
+      const f = frames[i];
+      if (!f.src || f.src.indexOf('tradingview') < 0) continue;
+      const orig = f.style.height;
+      f.style.height = (f.offsetHeight + 1) + 'px';
+      setTimeout(() => { f.style.height = orig; }, 150);
+    }
+    try { window.dispatchEvent(new Event('resize')); } catch (e) {}
+  }
 
   autoScroll() {
     if (this.props.autoScrollNews === false) return;
